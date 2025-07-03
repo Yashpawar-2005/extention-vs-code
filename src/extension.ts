@@ -18,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
 		res.json({ message: "hi" });
 	});
 
-	app.listen(5173, () => {
+	app.listen(9090, () => {
 		console.log('Express server running on http://localhost:5173');
 	});
 }
