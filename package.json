@@ -12,10 +12,16 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configurationDefaults": {
+    "workbench.colorTheme": "Default Dark+"
+  },
     "commands": [
       {
         "command": "start.helloWorld",
         "title": "Hello World"
+      },{
+        "command": "second",
+        "title": "staarting"
       }
     ]
   },
