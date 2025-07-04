@@ -24,9 +24,12 @@ export function activate(context: vscode.ExtensionContext) {
 		name: "AI Terminal",
 		hideFromUser: false
 	});
-		aiTerminal.show();
-		await vscode.commands.executeCommand("AI Terminal",command)
-	})
+	aiTerminal.show(true); // Show the terminal
+		aiTerminal.sendText(command); // Send the shell command
+
+		res.json({ status: `Command "${command}" sent to AI Terminal.` });
+	}
+)
 	app.post('/file',async(req,res)=>{
 		const path=req.body.path
 		const content=req.body.content
@@ -37,11 +40,12 @@ export function activate(context: vscode.ExtensionContext) {
 	  } catch {
 		await vscode.workspace.fs.createDirectory(vscode.Uri.file(dirname));
 	  }
-		await vscode.workspace.fs.writeFile(path,Buffer.from(content, 'utf8'))
+		await vscode.workspace.fs.writeFile(Uri,Buffer.from(content, 'utf8'))
+		res.json({ status: `File written to ${path}` });
 	})
 
 	app.listen(9090, () => {
-		console.log('Express server running on http://localhost:5173');
+		console.log('Express server running on http://localhost:9090');
 	});
 }
 
