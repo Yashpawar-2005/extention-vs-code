@@ -22,13 +22,23 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		ws.on('message', (message) => {
 			console.log('Received message:', message.toString());
-			if(message.toString()==="file"){
+			if(JSON.parse(message.toString()).type==="file"){
 				console.log(message)
 				// vscode.openfile()
+				
 				ws.send(message)
 			}
-			else if(message.toString()==="command"){
-				console.log(message)
+
+
+			else if(JSON.parse(message.toString()).type==="command"){
+					if (!aiTerminal) {
+			aiTerminal = vscode.window.createTerminal({
+				name: "AI Terminal",
+				hideFromUser: false
+			});
+		}
+		aiTerminal.show(true);
+		aiTerminal.sendText(JSON.parse(message.toString()).file);				
 			}
 			ws.send(`Server received: ${message}`);
 		});
