@@ -19,15 +19,23 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('WebSocket client connected');
 		vscode.window.showInformationMessage('WS Extension Activated');
 		ws.send("hi from WebSocket server");
-
+		
 		ws.on('message', (message) => {
 			console.log('Received message:', message.toString());
+			if(message.toString()==="file"){
+				console.log(message)
+				// vscode.openfile()
+				ws.send(message)
+			}
+			else if(message.toString()==="command"){
+				console.log(message)
+			}
 			ws.send(`Server received: ${message}`);
 		});
 
 		ws.on('close', () => {
 			console.log('WebSocket client disconnected');
-		});
+		}); 	
 
 		ws.on('error', (error) => {
 			console.error('WebSocket error:', error);
