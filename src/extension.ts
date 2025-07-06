@@ -20,28 +20,28 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('WS Extension Activated');
 		ws.send("hi from WebSocket server");
 		
-		ws.on('message', (message) => {
-			console.log('Received message:', message.toString());
-			if(JSON.parse(message.toString()).type==="file"){
-				console.log(message)
-				// vscode.openfile()
-				
-				ws.send(message)
-			}
+	ws.on('message', (message) => {
+	console.log('Received message:', message.toString());
 
-
-			else if(JSON.parse(message.toString()).type==="command"){
-					if (!aiTerminal) {
+	if (JSON.parse(message.toString()).type === "file") {
+		console.log(message);
+		// TODO: implement file handling (currently just echoing back)
+		ws.send(message);
+	} else if (JSON.parse(message.toString()).type === "command") {
+		if (!aiTerminal) {
 			aiTerminal = vscode.window.createTerminal({
 				name: "AI Terminal",
 				hideFromUser: false
 			});
 		}
 		aiTerminal.show(true);
-		aiTerminal.sendText(JSON.parse(message.toString()).command);				
-			}
-			ws.send(`Server received: ${message}`);
-		});
+		aiTerminal.sendText(JSON.parse(message.toString()).command);
+
+		ws.send(`Server executed command: ${JSON.parse(message.toString()).command}`);
+	} else {
+		ws.send(`Unknown message type received: ${message.toString()}`);
+	}
+});
 
 		ws.on('close', () => {
 			console.log('WebSocket client disconnected');
