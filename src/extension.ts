@@ -17,8 +17,10 @@ const fileFunction=async(parsed:any)=>{
 		} catch {
 			await vscode.workspace.fs.createDirectory(vscode.Uri.file(dirname));
 		}
-		await vscode.workspace.openTextDocument(Uri)
+		
 		await vscode.workspace.fs.writeFile(Uri, Buffer.from(content, 'utf8'));
+		const document = await vscode.workspace.openTextDocument(Uri);
+		await vscode.window.showTextDocument(document);
 		}
 
 
@@ -38,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('WS Extension Activated');
 		ws.send("hi from WebSocket server");
 		
-ws.on('message', (message) => {
+ws.on('message', async(message) => {
 	console.log('Raw message received:', message.toString());
 
 	let parsed;
@@ -51,7 +53,7 @@ ws.on('message', (message) => {
 
 	if (parsed.type === "file") {
 		
-		fileFunction(parsed)
+		await fileFunction(parsed)
 		ws.send(`File being parsed is ${parsed.filePath}`);
 	} 
 	else if (parsed.type === "command") {
