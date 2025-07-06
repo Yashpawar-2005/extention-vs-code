@@ -13,14 +13,15 @@
   "main": "./out/extension.js",
   "contributes": {
     "configurationDefaults": {
-    "workbench.colorTheme": "Default Dark+"
-  },
+      "workbench.colorTheme": "Default Dark+"
+    },
     "commands": [
       {
         "command": "start.helloWorld",
         "title": "Hello World"
-      },{
-        "command": "second",
+      },
+      {
+        "command": "start.second",
         "title": "staarting"
       }
     ]
@@ -46,6 +47,8 @@
   },
   "dependencies": {
     "@types/express": "^5.0.3",
-    "express": "^5.1.0"
+    "@types/ws": "^8.18.1",
+    "express": "^5.1.0",
+    "ws": "^8.18.3"
   }
 }

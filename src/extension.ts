@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import websocket from 'ws'
 import express from 'express'; // works with "type": "module" OR tsconfig settings
 import path from 'path';
 export function activate(context: vscode.ExtensionContext) {
@@ -10,7 +11,29 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(disposable);
 
-	
+const wss = new websocket.Server({ port: 9091 });
+
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+//   vscode.commands.executeCommand("start.second")
+  vscode.window.setStatusBarMessage("websocket started")
+	ws.send("hi");
+  ws.on('message', (message) => {
+    console.log('Received message:', message);
+    // Echo the message back to the client
+    ws.send(`Server received: ${message}`);
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
+});
+
+console.log('WebSocket server started on port 8080');
 	const app = express();
 	app.use(express.json());
 
