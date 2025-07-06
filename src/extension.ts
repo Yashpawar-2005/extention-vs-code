@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 		}
 		aiTerminal.show(true);
-		aiTerminal.sendText(JSON.parse(message.toString()).file);				
+		aiTerminal.sendText(JSON.parse(message.toString()).command);				
 			}
 			ws.send(`Server received: ${message}`);
 		});
