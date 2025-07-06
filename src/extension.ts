@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 		res.json({ message: "hi" });
 	});
 
-	app.post('/command', async (req, res) => {
+	app.post('/', async (req, res) => {
 		const command: string = req.body.command;
 
 		if (!aiTerminal) {
