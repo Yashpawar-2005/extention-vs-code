@@ -5,6 +5,24 @@ import path from 'path';
 
 let aiTerminal: vscode.Terminal | null = null;
 
+
+const fileFunction=async(parsed:any)=>{
+			const filePath = parsed.filePath;
+		const content = parsed.fileContent;
+
+		const Uri = vscode.Uri.file(filePath);
+		const dirname = path.dirname(filePath);
+			try {
+			await vscode.workspace.fs.stat(vscode.Uri.file(dirname));
+		} catch {
+			await vscode.workspace.fs.createDirectory(vscode.Uri.file(dirname));
+		}
+		await vscode.workspace.openTextDocument(Uri)
+		await vscode.workspace.fs.writeFile(Uri, Buffer.from(content, 'utf8'));
+		}
+
+
+
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Extension "start" is now active!');
 
@@ -21,30 +39,33 @@ export function activate(context: vscode.ExtensionContext) {
 		ws.send("hi from WebSocket server");
 		
 ws.on('message', (message) => {
-	console.log('🔹 Raw message received:', message.toString());
+	console.log('Raw message received:', message.toString());
 
 	let parsed;
 	try {
 		parsed = JSON.parse(message.toString());
 	} catch (err) {
-		ws.send(`❌ Failed to parse message: ${err}`);
+		ws.send(` Failed to parse message: ${err}`);
 		return;
 	}
 
 	if (parsed.type === "file") {
-		ws.send(message);
-	} else if (parsed.type === "command") {
+		
+		fileFunction(parsed)
+		ws.send(`File being parsed is ${parsed.filePath}`);
+	} 
+	else if (parsed.type === "command") {
 		if (!aiTerminal) {
 			aiTerminal = vscode.window.createTerminal({
-				name: "AI Terminal",
+				name: "Mera terminal hai kya kar lega",
 				hideFromUser: false
 			});
 		}
 		aiTerminal.show(true);
 		aiTerminal.sendText(parsed.command);
-		ws.send(`✅ Server executed command: ${parsed.command}`);
+		ws.send(`Server executed command: ${parsed.command}`);
 	} else {
-		ws.send(`❓ Unknown message type received: ${message.toString()}`);
+		ws.send(`Unknown message type received: ${message.toString()}`);
 	}
 });
 
