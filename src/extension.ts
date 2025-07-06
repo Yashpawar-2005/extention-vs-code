@@ -40,10 +40,10 @@ export function activate(context: vscode.ExtensionContext) {
 	app.use(express.json());
 
 	app.get('/', (req, res) => {
-		res.json({ message: "hi" });
+		res.json({ message: "teri mkc" });
 	});
 
-	app.post('/', async (req, res) => {
+	app.post('/command', async (req, res) => {
 		const command: string = req.body.command;
 
 		if (!aiTerminal) {
